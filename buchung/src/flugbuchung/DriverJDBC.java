@@ -1,13 +1,13 @@
 package flugbuchung;
 
-import java.net.ConnectException;
+//import java.net.ConnectException;
 import java.sql.*;
 
 public class DriverJDBC {
 
 	private static Connection con = null;
 	private String host;
-	private String port;
+	private int port;
 	private String user;
 	private String passwort;
 	private String database;
@@ -19,7 +19,29 @@ public class DriverJDBC {
 		setUser(user);
 		setPasswort(passwort);
 		setDatabase(database);
+		
+		//Standardport von MySQL 3306
 	}*/
+	
+	public static void main(String[] args) throws SQLException {
+		
+	/*DriverJDBC test = new DriverJDBC();
+	test.setHost("localhost");
+	test.setPort(3306);
+	test.setUser("root");
+	test.setPasswort("Mittwoch");
+	test.setDatabase("flightdata");
+	test.conDBmySQL();
+	try {
+		test.showAll("airports");
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	*/
+		
+	}
+	
 	public void conDBmySQL() throws SQLException{
 		
 		try{
@@ -45,26 +67,6 @@ public class DriverJDBC {
 		
 	}
 	
-	public void testDBmySQL(String table) throws SQLException{
-		String query = "SELECT * FROM " + table;
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery(query);
-		int columns = rs.getMetaData().getColumnCount();
-		System.out.println("Alle Einträge von "+table);
-		System.out.println();
-		for (int i = 1; i <= columns; i++)
-            System.out.print(rs.getMetaData().getColumnLabel(i) + "\t\t");
-        System.out.println();
-        System.out.println();
-        while (rs.next()) {
-            for (int i = 1; i <= columns; i++) {
-                System.out.print(rs.getString(i) + "\t\t");
-            }
-            System.out.println();
-        }
-        rs.close();
-        stmt.close();
-	}
 
 	public String getHost() {
 		return host;
@@ -74,11 +76,11 @@ public class DriverJDBC {
 		this.host = host;
 	}
 
-	public String getPort() {
+	public int getPort() {
 		return port;
 	}
 
-	public void setPort(String port) {
+	public void setPort(int port) {
 		this.port = port;
 	}
 
@@ -105,6 +107,61 @@ public class DriverJDBC {
 	public void setDatabase(String database) {
 		this.database = database;
 	}
+	
+	public String[] showFromAirport(String nameOfTable) throws SQLException {
+        // Statement mit Benennung der Tablle
+		String[]list = null;
+        String query = "SELECT name,airportcode FROM " + nameOfTable;
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+        int columns = rs.getMetaData().getColumnCount();
+        System.out.println("Alle Einträge zu den Personen ");
+        System.out.println();
+        // Ich zeige die Tabellenspaltennamen an.
+        for (int i = 1; i <= columns; i++)
+            System.out.print(rs.getMetaData().getColumnLabel(i) + "\t\t");
+        System.out.println();
+        System.out.println();
+        // Ich zeige den Inhalt der Tabelle an. Normaler Weise würde man die
+        // Ergebnisse in eine Liste schreiben und diese zurück liefern.
+        while (rs.next()) {
+            for (int i = 1; i <= columns; i++) {
+                System.out.print(rs.getString(i) + "\t\t");
+                list[i] = rs.getString(i);
+            }
+            System.out.println();
+        }
+        // Ich schließe die Streams wieder und gebe die Tabelle wieder frei.
+        rs.close();
+        stmt.close();
+        return list;
+    }
+	
+	  public void showToAirport(String nameOfTable) throws SQLException {
+	        // Statement mit Benennung der Tablle
+	        String query = "SELECT name,airportcode FROM " + nameOfTable;
+	        Statement stmt = con.createStatement();
+	        ResultSet rs = stmt.executeQuery(query);
+	        int columns = rs.getMetaData().getColumnCount();
+	        System.out.println("Alle Einträge zu den Personen ");
+	        System.out.println();
+	        // Ich zeige die Tabellenspaltennamen an.
+	        for (int i = 1; i <= columns; i++)
+	            System.out.print(rs.getMetaData().getColumnLabel(i) + "\t\t");
+	        System.out.println();
+	        System.out.println();
+	        // Ich zeige den Inhalt der Tabelle an. Normaler Weise würde man die
+	        // Ergebnisse in eine Liste schreiben und diese zurück liefern.
+	        while (rs.next()) {
+	            for (int i = 1; i <= columns; i++) {
+	                System.out.print(rs.getString(i) + "\t\t");
+	            }
+	            System.out.println();
+	        }
+	        // Ich schließe die Streams wieder und gebe die Tabelle wieder frei.
+	        rs.close();
+	        stmt.close();
+	    }
 }
 
 

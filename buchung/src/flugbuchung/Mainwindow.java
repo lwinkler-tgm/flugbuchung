@@ -3,32 +3,38 @@ package flugbuchung;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
+
+import java.sql.SQLException;
+
+import javax.swing.JOptionPane;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class Mainwindow {
 
 	protected Shell shlDbConnection;
-	private Text txtUser;
-	private Text txtPasswort;
-	private Text txtHost;
-	private Text txtPort;
-	private Text txtDatabase;
-	private Text text;
-	private Text text_1;
-	private Text text_2;
+	private Text user;
+	private Text passwort;
+	private Text mysqlhost;
+	private Text mysqlport;
+	private Text mysqldatabase;
+	private Text postgrehost;
+	private Text postgreport;
+	private Text postgredatabase;
 	private Text txtThin;
 	private Text txtServername;
-	private Text text_3;
+	private Text oracleport;
 	private Text txtSid;
-	private Text text_6;
+	private Text derbydatabase;
+	private Group mySQLGroup;
 
 	/**
 	 * Launch the application.
@@ -42,7 +48,6 @@ public class Mainwindow {
 			e.printStackTrace();
 		}
 		
-		DriverJDBC dbConnect = new DriverJDBC();
 		
 	}
 
@@ -66,7 +71,8 @@ public class Mainwindow {
 	 */
 	protected void createContents() {
 		shlDbConnection = new Shell();
-		shlDbConnection.setSize(614, 443);
+		shlDbConnection.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+		shlDbConnection.setSize(614, 552);
 		shlDbConnection.setText("DB Connection");
 		
 		Label txtDBAuswahl = new Label(shlDbConnection, SWT.NONE);
@@ -75,48 +81,59 @@ public class Mainwindow {
 		txtDBAuswahl.setBounds(135, 95, 215, 26);
 		
 		Group postgreGroup = new Group(shlDbConnection, SWT.NONE);
-		postgreGroup.setVisible(false);
-		postgreGroup.setBounds(93, 95, 480, 52);
+		postgreGroup.setVisible(true);
+		postgreGroup.setBounds(10, 385, 480, 52);
 		
-		Label jdbcPostgre = new Label(postgreGroup, SWT.NONE);
-		jdbcPostgre.setText("jdbc:postgres//");
-		jdbcPostgre.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
-		jdbcPostgre.setBounds(10, 16, 114, 26);
+		Label jdbypostgre = new Label(postgreGroup, SWT.NONE);
+		jdbypostgre.setText("jdbc:postgres//");
+		jdbypostgre.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+		jdbypostgre.setBounds(10, 16, 114, 26);
 		
 		
-		text = new Text(postgreGroup, SWT.BORDER);
-		text.setText("host");
-		text.setBounds(130, 16, 124, 26);
+		postgrehost = new Text(postgreGroup, SWT.BORDER);
+		postgrehost.setText("host");
+		postgrehost.setBounds(130, 16, 124, 26);
 		
-		Label label_3 = new Label(postgreGroup, SWT.NONE);
-		label_3.setText(":");
-		label_3.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
-		label_3.setBounds(260, 19, 9, 26);
+		Label postgredot = new Label(postgreGroup, SWT.NONE);
+		postgredot.setText(":");
+		postgredot.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+		postgredot.setBounds(260, 19, 9, 26);
 		
-		text_1 = new Text(postgreGroup, SWT.BORDER);
-		text_1.setText("port");
-		text_1.setBounds(272, 16, 52, 26);
+		postgreport = new Text(postgreGroup, SWT.BORDER);
+		postgreport.setText("port");
+		postgreport.setBounds(272, 16, 52, 26);
 		
-		Label label_4 = new Label(postgreGroup, SWT.NONE);
-		label_4.setText("/");
-		label_4.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
-		label_4.setBounds(330, 19, 9, 26);
+		Label postgredot2 = new Label(postgreGroup, SWT.NONE);
+		postgredot2.setText("/");
+		postgredot2.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+		postgredot2.setBounds(330, 19, 9, 26);
 		
-		text_2 = new Text(postgreGroup, SWT.BORDER);
-		text_2.setText("database");
-		text_2.setBounds(342, 16, 138, 26);
+		postgredatabase = new Text(postgreGroup, SWT.BORDER);
+		postgredatabase.setText("database");
+		postgredatabase.setBounds(342, 16, 138, 26);
 		
-		txtUser = new Text(shlDbConnection, SWT.BORDER);
-		txtUser.setText("user");
-		txtUser.setBounds(135, 153, 438, 26);
+		user = new Text(shlDbConnection, SWT.BORDER);
+		user.setText("user");
+		user.setBounds(135, 153, 438, 26);
 		
-		txtPasswort = new Text(shlDbConnection, SWT.BORDER);
-		txtPasswort.setText("passwort");
-		txtPasswort.setBounds(135, 207, 438, 26);
+		passwort = new Text(shlDbConnection, SWT.BORDER);
+		passwort.setText("passwort");
+		passwort.setBounds(135, 207, 438, 26);
 		
 		Button btnConnect = new Button(shlDbConnection, SWT.NONE);
+		btnConnect.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					InsertData();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		
-		btnConnect.setBounds(496, 297, 90, 30);
+		btnConnect.setBounds(260, 296, 90, 30);
 		btnConnect.setText("Connect");
 		
 		Label textURL = new Label(shlDbConnection, SWT.NONE);
@@ -144,94 +161,94 @@ public class Mainwindow {
 		btnOracle.setBounds(367, 54, 90, 30);
 		
 		
-		Group mySQLGroup = new Group(shlDbConnection, SWT.NONE);
-		mySQLGroup.setBounds(135, 90, 438, 52);
-		mySQLGroup.setVisible(false);
+		mySQLGroup = new Group(shlDbConnection, SWT.NONE);
+		mySQLGroup.setBounds(10, 327, 438, 52);
+		mySQLGroup.setVisible(true);
 		
 		Button btnMysql = new Button(shlDbConnection, SWT.NONE);
 	
 		btnMysql.setText("MySQL");
 		btnMysql.setBounds(135, 54, 90, 30);
 		
-		Label lblJdbcmysql = new Label(mySQLGroup, SWT.NONE);
-		lblJdbcmysql.setBounds(3, 23, 91, 26);
-		lblJdbcmysql.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
-		lblJdbcmysql.setText("jdbc:mysql//");
+		Label jdbcmysql = new Label(mySQLGroup, SWT.NONE);
+		jdbcmysql.setBounds(3, 23, 91, 26);
+		jdbcmysql.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+		jdbcmysql.setText("jdbc:mysql//");
 		
-		txtHost = new Text(mySQLGroup, SWT.BORDER);
-		txtHost.setBounds(98, 20, 124, 26);
-		txtHost.setText("host");
+		mysqlhost = new Text(mySQLGroup, SWT.BORDER);
+		mysqlhost.setBounds(98, 20, 124, 26);
+		mysqlhost.setText("host");
 		
-		Label label = new Label(mySQLGroup, SWT.NONE);
-		label.setBounds(228, 23, 9, 26);
-		label.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
-		label.setText(":");
+		Label mysqgldot = new Label(mySQLGroup, SWT.NONE);
+		mysqgldot.setBounds(228, 23, 9, 26);
+		mysqgldot.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+		mysqgldot.setText(":");
 		
-		txtPort = new Text(mySQLGroup, SWT.BORDER);
-		txtPort.setBounds(240, 20, 52, 26);
-		txtPort.setText("port");
+		mysqlport = new Text(mySQLGroup, SWT.BORDER);
+		mysqlport.setBounds(240, 20, 52, 26);
+		mysqlport.setText("port");
 		
-		Label label_1 = new Label(mySQLGroup, SWT.NONE);
-		label_1.setBounds(298, 23, 9, 26);
-		label_1.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
-		label_1.setText("/");
+		Label mysqldot2 = new Label(mySQLGroup, SWT.NONE);
+		mysqldot2.setBounds(298, 23, 9, 26);
+		mysqldot2.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+		mysqldot2.setText("/");
 		
-		txtDatabase = new Text(mySQLGroup, SWT.BORDER);
-		txtDatabase.setBounds(310, 20, 128, 26);
-		txtDatabase.setText("database");
+		mysqldatabase = new Text(mySQLGroup, SWT.BORDER);
+		mysqldatabase.setBounds(310, 20, 128, 26);
+		mysqldatabase.setText("database");
 		
 		Group oracleGroup = new Group(shlDbConnection, SWT.NONE);
-		oracleGroup.setBounds(79, 90, 507, 52);
-		oracleGroup.setVisible(false);
+		oracleGroup.setBounds(10, 432, 507, 52);
+		oracleGroup.setVisible(true);
 		
-		Label lblJdbcoracle = new Label(oracleGroup, SWT.NONE);
-		lblJdbcoracle.setText("jdbc:oracle//");
-		lblJdbcoracle.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
-		lblJdbcoracle.setBounds(10, 16, 97, 26);
+		Label jdbcoracle = new Label(oracleGroup, SWT.NONE);
+		jdbcoracle.setText("jdbc:oracle//");
+		jdbcoracle.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+		jdbcoracle.setBounds(10, 16, 97, 26);
 		
 		txtThin = new Text(oracleGroup, SWT.BORDER);
 		txtThin.setText("thin");
 		txtThin.setBounds(104, 16, 124, 26);
 		
-		Label label_5 = new Label(oracleGroup, SWT.NONE);
-		label_5.setText(":@");
-		label_5.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
-		label_5.setBounds(234, 19, 25, 26);
+		Label oracledot = new Label(oracleGroup, SWT.NONE);
+		oracledot.setText(":@");
+		oracledot.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+		oracledot.setBounds(234, 19, 25, 26);
 		
 		txtServername = new Text(oracleGroup, SWT.BORDER);
 		txtServername.setBounds(258, 16, 90, 26);
 		txtServername.setText("servername");
 		
-		Label label_6 = new Label(oracleGroup, SWT.NONE);
-		label_6.setBounds(354, 16, 9, 26);
-		label_6.setText(":");
-		label_6.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+		Label oracledot2 = new Label(oracleGroup, SWT.NONE);
+		oracledot2.setBounds(354, 16, 9, 26);
+		oracledot2.setText(":");
+		oracledot2.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
 		
-		text_3 = new Text(oracleGroup, SWT.BORDER);
-		text_3.setBounds(365, 16, 52, 26);
-		text_3.setText("port");
+		oracleport = new Text(oracleGroup, SWT.BORDER);
+		oracleport.setBounds(365, 16, 52, 26);
+		oracleport.setText("port");
 		
-		Label label_2 = new Label(oracleGroup, SWT.NONE);
-		label_2.setBounds(423, 16, 9, 26);
-		label_2.setText(":");
-		label_2.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+		Label oracledot3 = new Label(oracleGroup, SWT.NONE);
+		oracledot3.setBounds(423, 16, 9, 26);
+		oracledot3.setText(":");
+		oracledot3.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
 		
 		txtSid = new Text(oracleGroup, SWT.BORDER);
 		txtSid.setBounds(441, 16, 52, 26);
 		txtSid.setText("SID");
 		
 		Group derbyGroup = new Group(shlDbConnection, SWT.NONE);
-		derbyGroup.setVisible(false);
-		derbyGroup.setBounds(135, 90, 438, 52);
+		derbyGroup.setVisible(true);
+		derbyGroup.setBounds(0, 239, 438, 52);
 		
-		Label lblJdbcderby = new Label(derbyGroup, SWT.NONE);
-		lblJdbcderby.setText("jdbc:derby:");
-		lblJdbcderby.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
-		lblJdbcderby.setBounds(129, 19, 91, 26);
+		Label jdbcderby = new Label(derbyGroup, SWT.NONE);
+		jdbcderby.setText("jdbc:derby:");
+		jdbcderby.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+		jdbcderby.setBounds(129, 19, 91, 26);
 		
-		text_6 = new Text(derbyGroup, SWT.BORDER);
-		text_6.setText("database");
-		text_6.setBounds(224, 16, 75, 26);
+		derbydatabase = new Text(derbyGroup, SWT.BORDER);
+		derbydatabase.setText("database");
+		derbydatabase.setBounds(224, 16, 75, 26);
 		
 		
 		Button btnApacheDerby = new Button(shlDbConnection, SWT.NONE);
@@ -239,9 +256,9 @@ public class Mainwindow {
 		btnApacheDerby.setBounds(483, 54, 90, 30);
 		
 		
-		btnMysql.addMouseTrackListener(new MouseTrackAdapter() {
+		btnMysql.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void mouseEnter(MouseEvent e) {
+			public void widgetSelected(SelectionEvent e) {
 				mySQLGroup.setVisible(true);
 				derbyGroup.setVisible(false);
 				postgreGroup.setVisible(false);
@@ -250,9 +267,9 @@ public class Mainwindow {
 			}
 		});
 		
-		btnPostgreSQL.addMouseTrackListener(new MouseTrackAdapter() {
+		btnPostgreSQL.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void mouseEnter(MouseEvent e) {
+			public void widgetSelected(SelectionEvent e) {
 				postgreGroup.setVisible(true);
 				derbyGroup.setVisible(false);
 				mySQLGroup.setVisible(false);
@@ -262,9 +279,9 @@ public class Mainwindow {
 		});
 		
 		
-		btnOracle.addMouseTrackListener(new MouseTrackAdapter() {
+		btnOracle.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void mouseEnter(MouseEvent e) {
+			public void widgetSelected(SelectionEvent e) {
 				oracleGroup.setVisible(true);
 				derbyGroup.setVisible(false);
 				mySQLGroup.setVisible(false);
@@ -274,9 +291,9 @@ public class Mainwindow {
 			}
 		});
 		
-		btnApacheDerby.addMouseTrackListener(new MouseTrackAdapter() {
+		btnApacheDerby.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void mouseEnter(MouseEvent e) {
+			public void widgetSelected(SelectionEvent e) {
 				derbyGroup.setVisible(true);
 				mySQLGroup.setVisible(false);
 				postgreGroup.setVisible(false);
@@ -284,8 +301,32 @@ public class Mainwindow {
 				txtDBAuswahl.setVisible(false);
 			}
 		});
+		
 
-	}	
+	}
 	
+	public void InsertData() throws SQLException{
+		
+		if(mySQLGroup.getVisible()==true){
+		
+			DriverJDBC mySQLDB = new DriverJDBC();
+			mySQLDB.setHost(mysqlhost.getText());
+			int castmysqlport = Integer.parseInt(mysqlport.getText());
+			mySQLDB.setPort(castmysqlport);
+			mySQLDB.setDatabase(mysqldatabase.getText());
+			mySQLDB.setUser(user.getText());
+			mySQLDB.setPasswort(passwort.getText());
+			
+			mySQLDB.conDBmySQL();
+			
+			try {
+				FlugbuchungWindow window = new FlugbuchungWindow();
+				window.open();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 	
 }
