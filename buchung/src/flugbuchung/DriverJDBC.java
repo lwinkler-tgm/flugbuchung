@@ -6,30 +6,26 @@ import java.sql.*;
 public class DriverJDBC {
 
 	private static Connection con = null;
-	private static String host = "localhost";
-	private static String port = "3306";
-	private static String user = "root";
-	private static String passwort = "Mittwoch";
-	private static String database = "flightdata";
+	private String host;
+	private String port;
+	private String user;
+	private String passwort;
+	private String database;
 	
-	public static void main(String[] args) throws SQLException{
-		// TODO Auto-generated method stub
 		
-		DriverJDBC db = new DriverJDBC();
-		
-		db.conDB();
-		System.out.println();
-		db.testDB("airlines");
-		
-		
-	}
-	
-	public static void conDB() throws SQLException{
+	/*public DriverJDBC(String host,String port,String user,String passwort,String database){
+		setHost(host);
+		setPort(port);
+		setUser(user);
+		setPasswort(passwort);
+		setDatabase(database);
+	}*/
+	public void conDBmySQL() throws SQLException{
 		
 		try{
 			   System.out.println("Verbindung mit Datenbank wird aufgebaut"); // damit du weißt, dass die Methode angesprungen wird
 			   Class.forName("org.gjt.mm.mysql.Driver").newInstance();
-			   con = DriverManager.getConnection( "jdbc:mysql://"+host+":"+port+"/"+database, user, passwort );
+			   con = DriverManager.getConnection( "jdbc:mysql://"+getHost()+":"+getPort()+"/"+getDatabase(), getUser(), getPasswort() );
 			} catch (ClassNotFoundException cnfe) {
 			   System.out.println("Klasse für die Datenbank nicht gefunden\n" + cnfe.getMessage());
 			   System.out.println("Cause:" + cnfe.getLocalizedMessage());
@@ -49,7 +45,7 @@ public class DriverJDBC {
 		
 	}
 	
-	public void testDB(String table) throws SQLException{
+	public void testDBmySQL(String table) throws SQLException{
 		String query = "SELECT * FROM " + table;
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
@@ -68,6 +64,46 @@ public class DriverJDBC {
         }
         rs.close();
         stmt.close();
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getPasswort() {
+		return passwort;
+	}
+
+	public void setPasswort(String passwort) {
+		this.passwort = passwort;
+	}
+
+	public String getDatabase() {
+		return database;
+	}
+
+	public void setDatabase(String database) {
+		this.database = database;
 	}
 }
 

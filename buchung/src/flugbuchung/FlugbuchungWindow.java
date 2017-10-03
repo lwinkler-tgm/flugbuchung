@@ -7,7 +7,7 @@ import org.eclipse.swt.SWT;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 public class FlugbuchungWindow {
 
-	protected Shell shell;
+	protected Shell shlFlugbuchung;
 
 	/**
 	 * Launch the application.
@@ -30,9 +30,9 @@ public class FlugbuchungWindow {
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();
-		shell.open();
-		shell.layout();
-		while (!shell.isDisposed()) {
+		shlFlugbuchung.open();
+		shlFlugbuchung.layout();
+		while (!shlFlugbuchung.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -43,11 +43,11 @@ public class FlugbuchungWindow {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shell = new Shell();
-		shell.setSize(642, 463);
-		shell.setText("SWT Application");
+		shlFlugbuchung = new Shell();
+		shlFlugbuchung.setSize(642, 463);
+		shlFlugbuchung.setText("Flugbuchung");
 		
-		Label label = new Label(shell, SWT.NONE);
+		Label label = new Label(shlFlugbuchung, SWT.NONE);
 		label.setBounds(33, 44, 70, 20);
 
 	}
