@@ -13,10 +13,11 @@ import java.sql.Statement;
 
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.widgets.Table;
 //import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 public class FlugbuchungWindow {
 	
-	private Combo VonFlughafen;
+	private static Combo VonFlughafen;
 	private Combo NachFlughafen;
 
 	protected Shell shlFlugbuchung;
@@ -26,14 +27,19 @@ public class FlugbuchungWindow {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
-		
+		/*
+		try {
+			listeFlughafen();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 			FlugbuchungWindow window = new FlugbuchungWindow();
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	/**
@@ -80,7 +86,6 @@ public class FlugbuchungWindow {
 		lblRckflug.setBounds(33, 198, 70, 20);
 		
 		VonFlughafen = new Combo(shlFlugbuchung, SWT.NONE);
-		VonFlughafen.setItems(new String[] {"miep", "miep", "miep"});
 		VonFlughafen.setBounds(175, 38, 186, 28);
 		
 		NachFlughafen = new Combo(shlFlugbuchung, SWT.NONE);
@@ -94,13 +99,13 @@ public class FlugbuchungWindow {
 
 	}
 	
-	public void listeFlughafen() throws SQLException{
-		DriverJDBC miep = new DriverJDBC();
+	/*public static void listeFlughafen() throws SQLException{
+		DriverJDBC dBData = new DriverJDBC();
 		
-		String[] list = miep.showFromAirport("airport");
+		String[] fillList = dBData.showFromAirport("airport");
+		VonFlughafen.setItems(fillList);
 		
-		miep.showToAirport("airport");
-	}
-	
-	
+		
+		//miep.showToAirport("airport");
+	}*/
 }

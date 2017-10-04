@@ -2,6 +2,8 @@ package flugbuchung;
 
 //import java.net.ConnectException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DriverJDBC {
 
@@ -25,20 +27,15 @@ public class DriverJDBC {
 	
 	public static void main(String[] args) throws SQLException {
 		
-	/*DriverJDBC test = new DriverJDBC();
+	DriverJDBC test = new DriverJDBC();
 	test.setHost("localhost");
 	test.setPort(3306);
 	test.setUser("root");
 	test.setPasswort("Mittwoch");
 	test.setDatabase("flightdata");
 	test.conDBmySQL();
-	try {
-		test.showAll("airports");
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	*/
+	
+	
 		
 	}
 	
@@ -62,10 +59,13 @@ public class DriverJDBC {
 				e.printStackTrace();
 			} 
 			if(con.isClosed() == false){
-				System.out.println("Verbindung aufgebaut");
+				Mainwindow alertMessage = new Mainwindow();
+				alertMessage.MessageAlert("connected");
 			}
 		
 	}
+	
+	
 	
 
 	public String getHost() {
@@ -108,61 +108,5 @@ public class DriverJDBC {
 		this.database = database;
 	}
 	
-	public String[] showFromAirport(String nameOfTable) throws SQLException {
-        // Statement mit Benennung der Tablle
-		String[]list = null;
-        String query = "SELECT name,airportcode FROM " + nameOfTable;
-        Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery(query);
-        int columns = rs.getMetaData().getColumnCount();
-        System.out.println("Alle Einträge zu den Personen ");
-        System.out.println();
-        // Ich zeige die Tabellenspaltennamen an.
-        for (int i = 1; i <= columns; i++)
-            System.out.print(rs.getMetaData().getColumnLabel(i) + "\t\t");
-        System.out.println();
-        System.out.println();
-        // Ich zeige den Inhalt der Tabelle an. Normaler Weise würde man die
-        // Ergebnisse in eine Liste schreiben und diese zurück liefern.
-        while (rs.next()) {
-            for (int i = 1; i <= columns; i++) {
-                System.out.print(rs.getString(i) + "\t\t");
-                list[i] = rs.getString(i);
-            }
-            System.out.println();
-        }
-        // Ich schließe die Streams wieder und gebe die Tabelle wieder frei.
-        rs.close();
-        stmt.close();
-        return list;
-    }
 	
-	  public void showToAirport(String nameOfTable) throws SQLException {
-	        // Statement mit Benennung der Tablle
-	        String query = "SELECT name,airportcode FROM " + nameOfTable;
-	        Statement stmt = con.createStatement();
-	        ResultSet rs = stmt.executeQuery(query);
-	        int columns = rs.getMetaData().getColumnCount();
-	        System.out.println("Alle Einträge zu den Personen ");
-	        System.out.println();
-	        // Ich zeige die Tabellenspaltennamen an.
-	        for (int i = 1; i <= columns; i++)
-	            System.out.print(rs.getMetaData().getColumnLabel(i) + "\t\t");
-	        System.out.println();
-	        System.out.println();
-	        // Ich zeige den Inhalt der Tabelle an. Normaler Weise würde man die
-	        // Ergebnisse in eine Liste schreiben und diese zurück liefern.
-	        while (rs.next()) {
-	            for (int i = 1; i <= columns; i++) {
-	                System.out.print(rs.getString(i) + "\t\t");
-	            }
-	            System.out.println();
-	        }
-	        // Ich schließe die Streams wieder und gebe die Tabelle wieder frei.
-	        rs.close();
-	        stmt.close();
-	    }
 }
-
-
- 
