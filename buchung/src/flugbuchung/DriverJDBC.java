@@ -16,13 +16,13 @@ public class DriverJDBC {
 	private String user;
 	private String passwort;
 	private String database;
-	private static String[]arraylist = null;
+	private static String[]arraylist = null;	
 	
 	public void conDBmySQL() throws SQLException{
 		
 		
 		try{
-			   System.out.println("Verbindung mit Datenbank wird aufgebaut"); // damit du weißt, dass die Methode angesprungen wird
+			   System.out.println("Verbindung mit Datenbank wird aufgebaut"); // Info das Methode funktioniert
 			   Class.forName("org.gjt.mm.mysql.Driver").newInstance();
 			   con = DriverManager.getConnection( "jdbc:mysql://"+getHost()+":"+getPort()+"/"+getDatabase(), getUser(), getPasswort() );
 			} catch (ClassNotFoundException cnfe) {
@@ -41,7 +41,58 @@ public class DriverJDBC {
 		
 	}
 	
+	public void conDBpostgre(){
+		
+		try{
+			   System.out.println("Verbindung mit Datenbank wird aufgebaut"); // Info das Methode funktioniert
+			   Class.forName("org.postgresql.Driver");
+			   con = DriverManager.getConnection( "jdbc:postgres://"+getHost()+":"+getPort()+"/"+getDatabase(), getUser(), getPasswort() );
+			} catch (ClassNotFoundException cnfe) {
+			   System.out.println("Klasse für die Datenbank nicht gefunden\n" + cnfe.getMessage());
+			   System.out.println("Cause:" + cnfe.getLocalizedMessage());
+			   System.exit(1);
+			} catch (SQLException sqlverbindung) {
+			   System.out.println("Verbindung fehlgeschlagen:");
+			    System.out.println(sqlverbindung.getMessage());
+			    System.exit(1);
+			    } 
+	}
 	
+	public void conDBoracle(){
+
+		try{
+			   System.out.println("Verbindung mit Datenbank wird aufgebaut"); // Info das Methode funktioniert
+			   Class.forName("oracle.jdbc.driver.OracleDriver");
+			   con = DriverManager.getConnection( "jdbc:oracle:thin:@"+getHost()+":"+getPort()+":"+getDatabase(), getUser(), getPasswort() );
+			} catch (ClassNotFoundException cnfe) {
+			   System.out.println("Klasse für die Datenbank nicht gefunden\n" + cnfe.getMessage());
+			   System.out.println("Cause:" + cnfe.getLocalizedMessage());
+			
+			} catch (SQLException sqlverbindung) {
+			   System.out.println("Verbindung fehlgeschlagen:");
+			    System.out.println(sqlverbindung.getMessage());
+		
+			    } 
+	}
+	
+	public void conDBderby(){
+
+		try{
+			   System.out.println("Verbindung mit Datenbank wird aufgebaut"); // Info das Methode funktioniert
+			   Class.forName("org.apache.derby.jdbc.EmbeddedDrive");
+			   con = DriverManager.getConnection( "jdbc:derby:"+getDatabase(), getUser(), getPasswort() );
+			} catch (ClassNotFoundException cnfe) {
+			   System.out.println("Klasse für die Datenbank nicht gefunden\n" + cnfe.getMessage());
+			   System.out.println("Cause:" + cnfe.getLocalizedMessage());
+			
+			} catch (SQLException sqlverbindung) {
+			   System.out.println("Verbindung fehlgeschlagen:");
+			    System.out.println(sqlverbindung.getMessage());
+		
+			    } 
+	}
+	
+	//"Default" Befehl, um Datenbank zu durchsuchen
 	public void getDataTable(String tablename) throws SQLException{
 		
 		String query = "SELECT * FROM "+ tablename;
@@ -58,44 +109,51 @@ public class DriverJDBC {
 		stmt.close();
 		con.close();
 	}
-	
+	//Nimmt Flughafen, Staat, Kürzel und gibt diese an die ComboBoxen weiter
 	public static void getDataAirports(){
 	
 		try {
-			String query = "select countries.name,airports.name from airports,countries WHERE airports.country = countries.code ORDER BY 1;";
+			String query = "SELECT countries.name, airports.name, airportcode FROM airports, countries WHERE airports.country = countries.code ORDER BY 1;";
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			
-			//ArrayList für alle Elemente
+			//ArrayList speichert die Daten
 			
 			ArrayList<String> airports = new ArrayList<String>();
+			
+			
+			//Die Tabellen werden durchlaufen und nach format s.u. in das array gespeichert.
 			while(rs.next()) {
 				String country = rs.getString("countries.name");
 				String airport = rs.getString("airports.name");
-				airports.add(airport+"|"+country);
+				String airportcode = rs.getString("airportcode");
+				airports.add(airport+" || "+country+" || ("+airportcode+")");
 			}
 			
-			//Umwandlung in Array anschließend Zuweisung für die jeweiligen Dropdowns
+			//ArrayList wird in Array umgewandelt
 			
 			String[]array = airports.toArray(new String[airports.size()]);
 			
+			
+			//ComboBoxen bekommen die Arrays
 			for(String index:array){
 				Mainwindow.vonflughafen.add(index);
 				Mainwindow.nachflughafen.add(index);
 			}
 			
-		
+		//Port etc. wird wieder freigegeben
 		rs.close();
 		stmt.close();
 		con.close();
 		
+		//Exception falls etwas schiefläuft
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
 		
 		
 	}
-
+	//Standard getter und setter methoden
 	public String getHost() {
 		return host;
 	}

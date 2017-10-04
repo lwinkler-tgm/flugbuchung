@@ -35,12 +35,16 @@ public class Mainwindow {
 	private Text txtSid;
 	private Text derbydatabase;
 	private Group mySQLGroup;
+	private Group postgreGroup;
+	private Group oracleGroup;
+	private Group derbyGroup;
+	private Group groupFlughafen;
 	static Combo vonflughafen;
 	static Combo nachflughafen;
+	
 
 	/**
-	 * Launch the application.
-	 * @param args
+	 * Fenster wird erstellt.
 	 */
 	public static void main(String[] args) {
 		try {
@@ -54,7 +58,7 @@ public class Mainwindow {
 	}
 
 	/**
-	 * Open the window.
+	 *Fenster wird geöffnet..
 	 */
 	public void open() {
 		Display display = Display.getDefault();
@@ -69,25 +73,44 @@ public class Mainwindow {
 	}
 
 	/**
-	 * Create contents of the window.
+	 * Daten im Fenster werden erstellt.
 	 */
 	protected void createContents() {
 		shlDbConnection = new Shell();
 		shlDbConnection.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		shlDbConnection.setSize(843, 662);
+		shlDbConnection.setSize(617, 523);
 		shlDbConnection.setText("DB Connection");
 		
+		groupFlughafen = new Group(shlDbConnection, SWT.NONE);
+		groupFlughafen.setLocation(27, 31);
+		groupFlughafen.setSize(240, 88);
+		
+		vonflughafen = new Combo(groupFlughafen, SWT.NONE);
+		vonflughafen.setBounds(51, 20, 186, 28);
+		
+		nachflughafen = new Combo(groupFlughafen, SWT.NONE);
+		nachflughafen.setBounds(51, 57, 186, 28);
+		
+		Label lblNach = new Label(groupFlughafen, SWT.NONE);
+		lblNach.setBounds(3, 59, 46, 26);
+		lblNach.setText("Nach:");
+		
+		Label lblVon = new Label(groupFlughafen, SWT.NONE);
+		lblVon.setBounds(3, 20, 46, 26);
+		lblVon.setText("Von:");
+		groupFlughafen.setVisible(false);
+		
 		Group GroupAll = new Group(shlDbConnection, SWT.NONE);
-		GroupAll.setBounds(13, 20, 579, 451);
+		GroupAll.setBounds(10, 10, 579, 451);
 		
 		Label txtDBAuswahl = new Label(GroupAll, SWT.NONE);
 		txtDBAuswahl.setBounds(138, 61, 215, 26);
 		txtDBAuswahl.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
 		txtDBAuswahl.setText("Bitte DB Sprache ausw\u00E4hlen!");
 		
-		Group postgreGroup = new Group(GroupAll, SWT.NONE);
-		postgreGroup.setBounds(13, 351, 480, 52);
-		postgreGroup.setVisible(true);
+		postgreGroup = new Group(GroupAll, SWT.NONE);
+		postgreGroup.setBounds(96, 56, 480, 52);
+		postgreGroup.setVisible(false);
 		
 		Label jdbypostgre = new Label(postgreGroup, SWT.NONE);
 		jdbypostgre.setText("jdbc:postgres//");
@@ -133,6 +156,7 @@ public class Mainwindow {
 				try {
 					InsertData();
 					GroupAll.setVisible(false);
+					groupFlughafen.setVisible(true);
 				} catch (NumberFormatException message) {
 					alertMessage("NumberFormatException");
 				}
@@ -164,8 +188,8 @@ public class Mainwindow {
 			
 			
 			mySQLGroup = new Group(GroupAll, SWT.NONE);
-			mySQLGroup.setBounds(13, 293, 438, 52);
-			mySQLGroup.setVisible(true);
+			mySQLGroup.setBounds(138, 45, 438, 52);
+			mySQLGroup.setVisible(false);
 			
 			Label jdbcmysql = new Label(mySQLGroup, SWT.NONE);
 			jdbcmysql.setBounds(3, 23, 91, 26);
@@ -199,9 +223,9 @@ public class Mainwindow {
 			
 				btnMysql.setText("MySQL");
 				
-				Group oracleGroup = new Group(GroupAll, SWT.NONE);
-				oracleGroup.setBounds(23, 396, 408, 52);
-				oracleGroup.setVisible(true);
+				oracleGroup = new Group(GroupAll, SWT.NONE);
+				oracleGroup.setBounds(148, 56, 408, 52);
+				oracleGroup.setVisible(false);
 				
 				Label jdbcoracle = new Label(oracleGroup, SWT.NONE);
 				jdbcoracle.setText("jdbc:oracle//thin:@");
@@ -230,9 +254,9 @@ public class Mainwindow {
 				txtSid.setBounds(335, 16, 52, 26);
 				txtSid.setText("SID");
 				
-				Group derbyGroup = new Group(GroupAll, SWT.NONE);
-				derbyGroup.setBounds(3, 205, 438, 52);
-				derbyGroup.setVisible(true);
+				derbyGroup = new Group(GroupAll, SWT.NONE);
+				derbyGroup.setBounds(138, 45, 438, 52);
+				derbyGroup.setVisible(false);
 				
 				Label jdbcderby = new Label(derbyGroup, SWT.NONE);
 				jdbcderby.setText("jdbc:derby:");
@@ -248,20 +272,7 @@ public class Mainwindow {
 				btnApacheDerby.setBounds(486, 20, 90, 30);
 				btnApacheDerby.setText("Derby");
 				
-				Label lblVon = new Label(shlDbConnection, SWT.NONE);
-				lblVon.setText("Von:");
-				lblVon.setBounds(27, 495, 46, 26);
-				
-				Label lblNach = new Label(shlDbConnection, SWT.NONE);
-				lblNach.setText("Nach:");
-				lblNach.setBounds(27, 534, 46, 26);
-				
-				vonflughafen = new Combo(shlDbConnection, SWT.NONE);
-				vonflughafen.setBounds(75, 495, 186, 28);
-				
-				nachflughafen = new Combo(shlDbConnection, SWT.NONE);
-				nachflughafen.setBounds(75, 532, 186, 28);
-				
+				//Textfeld der jeweiligen für die jeweilige Sprache wird angezeigt, nachdem der Button gedrückt wurde.
 				btnApacheDerby.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
@@ -311,7 +322,7 @@ public class Mainwindow {
 		
 
 	}
-	
+	//Fehlermeldung als Text wenn etwas nicht richtig eingegeben wurde
 	public void alertMessage(String message){
 		
 		if(message == "NumberFormatException"){
@@ -324,9 +335,23 @@ public class Mainwindow {
 
 		
 	}
-	
+	//Daten werden in die Datenbank übertragen/Verbindung mit DB wird aufgebaut
 	public void InsertData(){
-		
+		if(postgreGroup.getVisible()==true){
+			
+			 DriverJDBC postgresDB = new DriverJDBC();
+			 postgresDB.conDBpostgre();
+			 postgresDB.setHost(postgrehost.getText());
+			 int castpostgreport = Integer.parseInt(postgreport.getText());
+			 postgresDB.setPort(castpostgreport);
+			 postgresDB.setDatabase(postgredatabase.getText());
+			 postgresDB.setUser(user.getText());
+			 postgresDB.setPasswort(passwort.getText());
+			 
+			 postgresDB.conDBpostgre();
+			 postgresDB.getDataAirports();
+			 
+			}
 		if(mySQLGroup.getVisible()==true){
 		
 			DriverJDBC mySQLDB = new DriverJDBC();
@@ -346,10 +371,32 @@ public class Mainwindow {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
-			
 		}
 		
+		if(oracleGroup.getVisible()==true){
+			
+			DriverJDBC oracleDB = new DriverJDBC();
+			oracleDB.setHost(txtServername.getText());
+			int castoracleport = Integer.parseInt(oracleport.getText());
+			oracleDB.setPort(castoracleport);
+			oracleDB.setDatabase(txtSid.getText());
+			oracleDB.setUser(user.getText());
+			oracleDB.setPasswort(passwort.getText());
+			
+			oracleDB.conDBoracle();
+			oracleDB.getDataAirports();
+		}
+		
+		if(derbyGroup.getVisible()==true){
+			
+			DriverJDBC derbyDB = new DriverJDBC();
+			derbyDB.setDatabase(derbydatabase.getText());
+			derbyDB.setUser(user.getText());
+			derbyDB.setPasswort(passwort.getText());
+			
+			derbyDB.conDBderby();
+			derbyDB.getDataAirports();
+		}
 	}
 }
+
