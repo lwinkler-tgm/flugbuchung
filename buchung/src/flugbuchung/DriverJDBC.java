@@ -58,10 +58,7 @@ public class DriverJDBC {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-			if(con.isClosed() == false){
-				Mainwindow alertMessage = new Mainwindow();
-				alertMessage.MessageAlert("connected");
-			}
+			
 		
 	}
 	
