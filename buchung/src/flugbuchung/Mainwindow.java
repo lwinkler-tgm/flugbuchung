@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Combo;
 
 public class Mainwindow {
 
-	protected Shell shlDbConnection;
+	protected static Shell shlDbConnection;
 	private Text user;
 	private Text passwort;
 	private Text mysqlhost;
@@ -38,9 +38,11 @@ public class Mainwindow {
 	private Group postgreGroup;
 	private Group oracleGroup;
 	private Group derbyGroup;
-	private Group groupFlughafen;
+	private Group submitbutton;
 	static Combo vonflughafen;
 	static Combo nachflughafen;
+	private Text txtvorname;
+	private Text txtnachname;
 	
 
 	/**
@@ -78,27 +80,8 @@ public class Mainwindow {
 	protected void createContents() {
 		shlDbConnection = new Shell();
 		shlDbConnection.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		shlDbConnection.setSize(617, 523);
+		shlDbConnection.setSize(1013, 608);
 		shlDbConnection.setText("DB Connection");
-		
-		groupFlughafen = new Group(shlDbConnection, SWT.NONE);
-		groupFlughafen.setLocation(27, 31);
-		groupFlughafen.setSize(240, 88);
-		
-		vonflughafen = new Combo(groupFlughafen, SWT.NONE);
-		vonflughafen.setBounds(51, 20, 186, 28);
-		
-		nachflughafen = new Combo(groupFlughafen, SWT.NONE);
-		nachflughafen.setBounds(51, 57, 186, 28);
-		
-		Label lblNach = new Label(groupFlughafen, SWT.NONE);
-		lblNach.setBounds(3, 59, 46, 26);
-		lblNach.setText("Nach:");
-		
-		Label lblVon = new Label(groupFlughafen, SWT.NONE);
-		lblVon.setBounds(3, 20, 46, 26);
-		lblVon.setText("Von:");
-		groupFlughafen.setVisible(false);
 		
 		Group GroupAll = new Group(shlDbConnection, SWT.NONE);
 		GroupAll.setBounds(10, 10, 579, 451);
@@ -108,8 +91,36 @@ public class Mainwindow {
 		txtDBAuswahl.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
 		txtDBAuswahl.setText("Bitte DB Sprache ausw\u00E4hlen!");
 		
+		Label txtVerbindung = new Label(GroupAll, SWT.NONE);
+		txtVerbindung.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		txtVerbindung.setText("Verbindung nicht m\u00F6glich!");
+		txtVerbindung.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+		txtVerbindung.setBounds(138, 61, 215, 26);
+		txtVerbindung.setVisible(false);
+		
+		Label txtwarning = new Label(GroupAll, SWT.NONE);
+		txtwarning.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		txtwarning.setText("Bitte Daten richtig eingeben!");
+		txtwarning.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+		txtwarning.setBounds(138, 61, 215, 26);
+		txtwarning.setVisible(false);
+		
+		derbyGroup = new Group(GroupAll, SWT.NONE);
+		derbyGroup.setLocation(138, 61);
+		derbyGroup.setSize(438, 52);
+		derbyGroup.setVisible(false);
+		
+		Label jdbcderby = new Label(derbyGroup, SWT.NONE);
+		jdbcderby.setText("jdbc:derby:");
+		jdbcderby.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+		jdbcderby.setBounds(129, 19, 91, 26);
+		
+		derbydatabase = new Text(derbyGroup, SWT.BORDER);
+		derbydatabase.setText("database");
+		derbydatabase.setBounds(224, 16, 75, 26);
+		
 		postgreGroup = new Group(GroupAll, SWT.NONE);
-		postgreGroup.setBounds(96, 56, 480, 52);
+		postgreGroup.setBounds(96, 61, 480, 52);
 		postgreGroup.setVisible(false);
 		
 		Label jdbypostgre = new Label(postgreGroup, SWT.NONE);
@@ -154,11 +165,20 @@ public class Mainwindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
+					
 					InsertData();
 					GroupAll.setVisible(false);
-					groupFlughafen.setVisible(true);
+					submitbutton.setVisible(true);
+					System.out.println("Daten wurden übermittelt");
+	
 				} catch (NumberFormatException message) {
-					alertMessage("NumberFormatException");
+					txtwarning.setVisible(true);
+					txtDBAuswahl.setVisible(false);
+					mySQLGroup.setVisible(false);
+					postgreGroup.setVisible(false);
+					oracleGroup.setVisible(false);
+					derbyGroup.setVisible(false);
+					System.out.println("Test***Felder sind nicht ausgefüllt");
 				}
 			}
 		});
@@ -188,7 +208,7 @@ public class Mainwindow {
 			
 			
 			mySQLGroup = new Group(GroupAll, SWT.NONE);
-			mySQLGroup.setBounds(138, 45, 438, 52);
+			mySQLGroup.setBounds(138, 56, 438, 52);
 			mySQLGroup.setVisible(false);
 			
 			Label jdbcmysql = new Label(mySQLGroup, SWT.NONE);
@@ -254,28 +274,58 @@ public class Mainwindow {
 				txtSid.setBounds(335, 16, 52, 26);
 				txtSid.setText("SID");
 				
-				derbyGroup = new Group(GroupAll, SWT.NONE);
-				derbyGroup.setBounds(138, 45, 438, 52);
-				derbyGroup.setVisible(false);
-				
-				Label jdbcderby = new Label(derbyGroup, SWT.NONE);
-				jdbcderby.setText("jdbc:derby:");
-				jdbcderby.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
-				jdbcderby.setBounds(129, 19, 91, 26);
-				
-				derbydatabase = new Text(derbyGroup, SWT.BORDER);
-				derbydatabase.setText("database");
-				derbydatabase.setBounds(224, 16, 75, 26);
-				
 				
 				Button btnApacheDerby = new Button(GroupAll, SWT.NONE);
 				btnApacheDerby.setBounds(486, 20, 90, 30);
 				btnApacheDerby.setText("Derby");
 				
+				submitbutton = new Group(shlDbConnection, SWT.NONE);
+				submitbutton.setBounds(482, 271, 556, 225);
+				
+				vonflughafen = new Combo(submitbutton, SWT.NONE);
+				vonflughafen.setBounds(94, 20, 272, 28);
+				
+				nachflughafen = new Combo(submitbutton, SWT.NONE);
+				nachflughafen.setBounds(94, 60, 272, 28);
+				
+				Label lblNach = new Label(submitbutton, SWT.NONE);
+				lblNach.setBounds(3, 59, 46, 26);
+				lblNach.setText("Nach:");
+				
+				Label lblVon = new Label(submitbutton, SWT.NONE);
+				lblVon.setBounds(3, 20, 46, 26);
+				lblVon.setText("Von:");
+				submitbutton.setVisible(true);
+				
+				Button btnBesttigen = new Button(submitbutton, SWT.NONE);
+				btnBesttigen.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						DriverJDBC.compareSelections();
+					}
+				});
+				btnBesttigen.setText("Best\u00E4tigen");
+				btnBesttigen.setBounds(387, 41, 90, 30);
+				
+				Label lblVorname = new Label(submitbutton, SWT.NONE);
+				lblVorname.setText("Vorname:");
+				lblVorname.setBounds(3, 109, 81, 26);
+				
+				Label lblNachname = new Label(submitbutton, SWT.NONE);
+				lblNachname.setText("Nachname:");
+				lblNachname.setBounds(3, 148, 81, 26);
+				
+				txtvorname = new Text(submitbutton, SWT.BORDER);
+				txtvorname.setBounds(94, 106, 272, 26);
+				
+				txtnachname = new Text(submitbutton, SWT.BORDER);
+				txtnachname.setBounds(94, 148, 272, 26);
+				
 				//Textfeld der jeweiligen für die jeweilige Sprache wird angezeigt, nachdem der Button gedrückt wurde.
 				btnApacheDerby.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
+						txtwarning.setVisible(false);
 						derbyGroup.setVisible(true);
 						mySQLGroup.setVisible(false);
 						postgreGroup.setVisible(false);
@@ -288,6 +338,7 @@ public class Mainwindow {
 				btnMysql.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
+						txtwarning.setVisible(false);
 						mySQLGroup.setVisible(true);
 						derbyGroup.setVisible(false);
 						postgreGroup.setVisible(false);
@@ -300,6 +351,7 @@ public class Mainwindow {
 			btnOracle.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
+					txtwarning.setVisible(false);
 					oracleGroup.setVisible(true);
 					derbyGroup.setVisible(false);
 					mySQLGroup.setVisible(false);
@@ -312,6 +364,7 @@ public class Mainwindow {
 		btnPostgreSQL.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				txtwarning.setVisible(false);
 				postgreGroup.setVisible(true);
 				derbyGroup.setVisible(false);
 				mySQLGroup.setVisible(false);
@@ -323,7 +376,7 @@ public class Mainwindow {
 
 	}
 	//Fehlermeldung als Text wenn etwas nicht richtig eingegeben wurde
-	public void alertMessage(String message){
+	public static void alertMessage(String message){
 		
 		if(message == "NumberFormatException"){
 		Label alertText = new Label(shlDbConnection, SWT.NONE);
@@ -332,13 +385,23 @@ public class Mainwindow {
 		alertText.setBounds(69, 10, 234, 20);
 		alertText.setText("Bitte Daten richtig eingeben!");
 		}
+		
+		if(message == "no_connection"){
+			Label alertText = new Label(shlDbConnection, SWT.NONE);
+			alertText.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+			alertText.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD | SWT.ITALIC));
+			alertText.setBounds(69, 10, 234, 20);
+			alertText.setVisible(true);
+			alertText.setText("Flug zwischen den Flughäfen ist nicht möglich!");
+			}
 
 		
 	}
 	//Daten werden in die Datenbank übertragen/Verbindung mit DB wird aufgebaut
 	public void InsertData(){
+		try{
 		if(postgreGroup.getVisible()==true){
-			
+	
 			 DriverJDBC postgresDB = new DriverJDBC();
 			 postgresDB.conDBpostgre();
 			 postgresDB.setHost(postgrehost.getText());
@@ -361,20 +424,18 @@ public class Mainwindow {
 			mySQLDB.setDatabase(mysqldatabase.getText());
 			mySQLDB.setUser(user.getText());
 			mySQLDB.setPasswort(passwort.getText());
+			System.out.println("MySQL Daten werden übergeben");
 			
-			try {
+			
 				mySQLDB.conDBmySQL();
 				mySQLDB.getDataAirports();
 				
 		
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
 		}
 		
 		if(oracleGroup.getVisible()==true){
-			
+	
 			DriverJDBC oracleDB = new DriverJDBC();
 			oracleDB.setHost(txtServername.getText());
 			int castoracleport = Integer.parseInt(oracleport.getText());
@@ -388,7 +449,7 @@ public class Mainwindow {
 		}
 		
 		if(derbyGroup.getVisible()==true){
-			
+		
 			DriverJDBC derbyDB = new DriverJDBC();
 			derbyDB.setDatabase(derbydatabase.getText());
 			derbyDB.setUser(user.getText());
@@ -396,6 +457,10 @@ public class Mainwindow {
 			
 			derbyDB.conDBderby();
 			derbyDB.getDataAirports();
+		}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
 		}
 	}
 }

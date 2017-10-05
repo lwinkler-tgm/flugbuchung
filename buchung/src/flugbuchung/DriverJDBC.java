@@ -4,7 +4,7 @@ package flugbuchung;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
 //import org.postgresql.ds.PGSimpleDataSource;
 //import oracle.jdbc.pool.OracleDataSource;
 
@@ -16,6 +16,9 @@ public class DriverJDBC {
 	private String user;
 	private String passwort;
 	private String database;
+	private String vorname;
+	private String nachname;
+	
 	private static String[]arraylist = null;	
 	
 	public void conDBmySQL() throws SQLException{
@@ -127,7 +130,7 @@ public class DriverJDBC {
 				String country = rs.getString("countries.name");
 				String airport = rs.getString("airports.name");
 				String airportcode = rs.getString("airportcode");
-				airports.add(airport+" || "+country+" || ("+airportcode+")");
+				airports.add(airport+","+country);
 			}
 			
 			//ArrayList wird in Array umgewandelt
@@ -141,10 +144,10 @@ public class DriverJDBC {
 				Mainwindow.nachflughafen.add(index);
 			}
 			
+			
 		//Port etc. wird wieder freigegeben
 		rs.close();
 		stmt.close();
-		con.close();
 		
 		//Exception falls etwas schiefläuft
 		}catch(SQLException e){
@@ -153,6 +156,76 @@ public class DriverJDBC {
 		
 		
 	}
+	
+	public static void compareSelections(){
+		
+		int vonFlughafenString = Mainwindow.vonflughafen.getSelectionIndex();
+		int nachFlughafenString = Mainwindow.nachflughafen.getSelectionIndex();
+		
+		String vF = Mainwindow.vonflughafen.getItem(vonFlughafenString);
+		String nF = Mainwindow.nachflughafen.getItem(nachFlughafenString);
+		
+		String[] splitStringvonF = vF.split(",");
+		String[] splitStringnachF = nF.split(",");
+		
+		try {
+			
+			String query = 	("SELECT * FROM flights, "
+							+"(SELECT airportcode as 'vonFlughafen' FROM airports "
+							+"WHERE name='"+splitStringvonF[0]+"')vonFlughafenString, "
+							+"(SELECT airportcode as 'nachFlughafen' FROM airports "
+							+"WHERE name='"+splitStringnachF[0]+"')nachFlughafenString "
+							+"WHERE vonFlughafen = departure_airport AND nachFlughafen = destination_airport;");
+			
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			ArrayList<String> flightConnection = new ArrayList<String>();
+			
+			while(rs.next()) {
+				
+				flightConnection.add(rs.getString("departure_airport")+rs.getString("destination_airport"));
+			}
+			
+			String[] ArrtoString = flightConnection.toArray(new String[flightConnection.size()]);
+			
+			if(ArrtoString.length==0){
+				System.out.println("Keine Flug zwischen "+splitStringvonF[0]+" und "+splitStringnachF[0]+" möglich!");
+			}
+			else{
+				System.out.println("Flug vorhanden!");
+			}
+				
+			rs.close();
+			stmt.close();
+			
+			}
+			
+			catch(SQLException alert){
+				alert.printStackTrace();
+			}
+			
+	}
+	
+	public void insertPassenger(){
+		
+		
+		int vonFlughafenString = Mainwindow.vonflughafen.getSelectionIndex();
+		int nachFlughafenString = Mainwindow.nachflughafen.getSelectionIndex();
+		
+		String vF = Mainwindow.vonflughafen.getItem(vonFlughafenString);
+		String nF = Mainwindow.nachflughafen.getItem(nachFlughafenString);
+		
+		String[] splitStringvonF = vF.split(",");
+		String[] splitStringnachF = nF.split(",");
+		
+		String vonFlug = splitStringvonF[0];
+		String nachFlug = splitStringnachF[0];
+		
+	}
+	
+	
+	
 	//Standard getter und setter methoden
 	public String getHost() {
 		return host;
