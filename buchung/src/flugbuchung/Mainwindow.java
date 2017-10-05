@@ -41,8 +41,12 @@ public class Mainwindow {
 	private Group submitbutton;
 	static Combo vonflughafen;
 	static Combo nachflughafen;
-	private Text txtvorname;
-	private Text txtnachname;
+	static Text txtvorname;
+	static Text txtnachname;
+	static Text txtfnr;
+	static Text txtrow;
+	static Text txtseat;
+	static Text txtairline;
 	
 
 	/**
@@ -80,8 +84,95 @@ public class Mainwindow {
 	protected void createContents() {
 		shlDbConnection = new Shell();
 		shlDbConnection.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-		shlDbConnection.setSize(1013, 608);
+		shlDbConnection.setSize(614, 519);
 		shlDbConnection.setText("DB Connection");
+		
+		submitbutton = new Group(shlDbConnection, SWT.NONE);
+		submitbutton.setLocation(21, 10);
+		submitbutton.setSize(556, 398);
+		
+		vonflughafen = new Combo(submitbutton, SWT.NONE);
+		vonflughafen.setBounds(94, 20, 272, 28);
+		
+		nachflughafen = new Combo(submitbutton, SWT.NONE);
+		nachflughafen.setBounds(94, 60, 272, 28);
+		
+		Label lblNach = new Label(submitbutton, SWT.NONE);
+		lblNach.setBounds(3, 59, 46, 26);
+		lblNach.setText("Nach:");
+		
+		Label lblVon = new Label(submitbutton, SWT.NONE);
+		lblVon.setBounds(3, 20, 46, 26);
+		lblVon.setText("Von:");
+		submitbutton.setVisible(false);
+		
+		Button btnBesttigen = new Button(submitbutton, SWT.NONE);
+		btnBesttigen.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				DriverJDBC.compareSelections();
+			}
+		});
+		btnBesttigen.setText("Best\u00E4tigen");
+		btnBesttigen.setBounds(387, 41, 90, 30);
+		
+		Label lblVorname = new Label(submitbutton, SWT.NONE);
+		lblVorname.setText("Vorname:");
+		lblVorname.setBounds(3, 109, 81, 26);
+		
+		Label lblNachname = new Label(submitbutton, SWT.NONE);
+		lblNachname.setText("Nachname:");
+		lblNachname.setBounds(3, 148, 81, 26);
+		
+		txtvorname = new Text(submitbutton, SWT.BORDER);
+		txtvorname.setText("Leo");
+		txtvorname.setBounds(94, 106, 272, 26);
+		
+		txtnachname = new Text(submitbutton, SWT.BORDER);
+		txtnachname.setText("Winkler");
+		txtnachname.setBounds(94, 148, 272, 26);
+		
+		txtfnr = new Text(submitbutton, SWT.BORDER);
+		txtfnr.setText("872");
+		txtfnr.setBounds(198, 239, 81, 26);
+		
+		Label lblFlugnr = new Label(submitbutton, SWT.NONE);
+		lblFlugnr.setText("Flugnr:");
+		lblFlugnr.setBounds(3, 239, 81, 26);
+		
+		txtrow = new Text(submitbutton, SWT.BORDER);
+		txtrow.setText("21");
+		txtrow.setBounds(199, 279, 80, 26);
+		
+		txtseat = new Text(submitbutton, SWT.BORDER);
+		txtseat.setText("F");
+		txtseat.setBounds(198, 315, 81, 26);
+		
+		Label lblReihe = new Label(submitbutton, SWT.NONE);
+		lblReihe.setText("Reihe:");
+		lblReihe.setBounds(3, 279, 81, 26);
+		
+		Label lblSitzplatz = new Label(submitbutton, SWT.NONE);
+		lblSitzplatz.setText("Sitzplatz:");
+		lblSitzplatz.setBounds(3, 315, 81, 26);
+		
+		Label lblAirline = new Label(submitbutton, SWT.NONE);
+		lblAirline.setText("Airline:");
+		lblAirline.setBounds(3, 200, 81, 26);
+		
+		txtairline = new Text(submitbutton, SWT.BORDER);
+		txtairline.setText("UP");
+		txtairline.setBounds(198, 200, 81, 26);
+		
+		Button btnSave = new Button(submitbutton, SWT.NONE);
+		btnSave.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				DriverJDBC.insertPassenger();
+			}
+		});
+		btnSave.setText("Save");
+		btnSave.setBounds(303, 260, 90, 30);
 		
 		Group GroupAll = new Group(shlDbConnection, SWT.NONE);
 		GroupAll.setBounds(10, 10, 579, 451);
@@ -278,48 +369,6 @@ public class Mainwindow {
 				Button btnApacheDerby = new Button(GroupAll, SWT.NONE);
 				btnApacheDerby.setBounds(486, 20, 90, 30);
 				btnApacheDerby.setText("Derby");
-				
-				submitbutton = new Group(shlDbConnection, SWT.NONE);
-				submitbutton.setBounds(482, 271, 556, 225);
-				
-				vonflughafen = new Combo(submitbutton, SWT.NONE);
-				vonflughafen.setBounds(94, 20, 272, 28);
-				
-				nachflughafen = new Combo(submitbutton, SWT.NONE);
-				nachflughafen.setBounds(94, 60, 272, 28);
-				
-				Label lblNach = new Label(submitbutton, SWT.NONE);
-				lblNach.setBounds(3, 59, 46, 26);
-				lblNach.setText("Nach:");
-				
-				Label lblVon = new Label(submitbutton, SWT.NONE);
-				lblVon.setBounds(3, 20, 46, 26);
-				lblVon.setText("Von:");
-				submitbutton.setVisible(true);
-				
-				Button btnBesttigen = new Button(submitbutton, SWT.NONE);
-				btnBesttigen.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						DriverJDBC.compareSelections();
-					}
-				});
-				btnBesttigen.setText("Best\u00E4tigen");
-				btnBesttigen.setBounds(387, 41, 90, 30);
-				
-				Label lblVorname = new Label(submitbutton, SWT.NONE);
-				lblVorname.setText("Vorname:");
-				lblVorname.setBounds(3, 109, 81, 26);
-				
-				Label lblNachname = new Label(submitbutton, SWT.NONE);
-				lblNachname.setText("Nachname:");
-				lblNachname.setBounds(3, 148, 81, 26);
-				
-				txtvorname = new Text(submitbutton, SWT.BORDER);
-				txtvorname.setBounds(94, 106, 272, 26);
-				
-				txtnachname = new Text(submitbutton, SWT.BORDER);
-				txtnachname.setBounds(94, 148, 272, 26);
 				
 				//Textfeld der jeweiligen für die jeweilige Sprache wird angezeigt, nachdem der Button gedrückt wurde.
 				btnApacheDerby.addSelectionListener(new SelectionAdapter() {

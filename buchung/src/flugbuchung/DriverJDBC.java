@@ -207,7 +207,7 @@ public class DriverJDBC {
 			
 	}
 	
-	public void insertPassenger(){
+	public static void insertPassenger(){
 		
 		
 		int vonFlughafenString = Mainwindow.vonflughafen.getSelectionIndex();
@@ -221,6 +221,27 @@ public class DriverJDBC {
 		
 		String vonFlug = splitStringvonF[0];
 		String nachFlug = splitStringnachF[0];
+		
+		String getvorname = Mainwindow.txtvorname.getText();
+		String getnachname = Mainwindow.txtnachname.getText();
+		String flightnr = Mainwindow.txtfnr.getText();
+		String airline = Mainwindow.txtairline.getText();
+		String row = Mainwindow.txtrow.getText();
+		String seat = Mainwindow.txtseat.getText();
+		
+		try{
+			String query = "INSERT INTO passengers VALUES(NULL,'"+getvorname+"','"+getnachname+"','"+airline+"','"+Integer.parseInt(flightnr)+"','"+row+"','"+seat+"');";
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.executeUpdate();
+			
+			
+			
+			stmt.close();
+			
+		}catch(SQLException alert){
+			System.out.println("Passagier konnte nicht hinzugefügt werden!");
+			alert.printStackTrace();
+		}
 		
 	}
 	
