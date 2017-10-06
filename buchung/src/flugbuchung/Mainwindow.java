@@ -20,7 +20,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Combo;
 
 public class Mainwindow {
-
+	
+	//Globale Variablen zum speichern von Daten, und dadurch die Möglichkeit auf die Daten von Klasse DriverJDBC zuzugreifen.
 	protected static Shell shlDbConnection;
 	private Text user;
 	private Text passwort;
@@ -50,7 +51,7 @@ public class Mainwindow {
 	
 
 	/**
-	 * Fenster wird erstellt.
+	 * Das Fenster ohne Inhalt wird erstellt, bei Fehler erfolgt eine Ausgabe der Exception auf die Konsole
 	 */
 	public static void main(String[] args) {
 		try {
@@ -64,7 +65,8 @@ public class Mainwindow {
 	}
 
 	/**
-	 *Fenster wird geöffnet..
+	 *Das Fenster wird geöffnet und die Daten von createContents werden ebenalls erstellt und hineingeladen.
+	 *Dannach wird das Layout erstellt.
 	 */
 	public void open() {
 		Display display = Display.getDefault();
@@ -79,7 +81,7 @@ public class Mainwindow {
 	}
 
 	/**
-	 * Daten im Fenster werden erstellt.
+	 * Daten welche im Fenster angezeigt werden sollen werden hier erstellt.
 	 */
 	protected void createContents() {
 		shlDbConnection = new Shell();
@@ -106,6 +108,8 @@ public class Mainwindow {
 		lblVon.setText("Von:");
 		submitbutton.setVisible(false);
 		
+		
+		//ButtonListener, damit bei einem KLick auf den Button die FUnktion compareSelections von DriverJDBC ausgeführt wird.
 		Button btnBesttigen = new Button(submitbutton, SWT.NONE);
 		btnBesttigen.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -113,6 +117,8 @@ public class Mainwindow {
 				DriverJDBC.compareSelections();
 			}
 		});
+		
+		//Zeigt Default Text an und setzt die Größe des Buttons
 		btnBesttigen.setText("Best\u00E4tigen");
 		btnBesttigen.setBounds(387, 41, 90, 30);
 		
@@ -164,6 +170,9 @@ public class Mainwindow {
 		txtairline.setText("UP");
 		txtairline.setBounds(198, 200, 81, 26);
 		
+		
+		//SelectionListener warte darauf, dass der Button geklickt wird.
+		//Danach erfolgt der Aufruf der Methode insertPassenger, welche die Daten an die DB übergibt.
 		Button btnSave = new Button(submitbutton, SWT.NONE);
 		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -250,6 +259,8 @@ public class Mainwindow {
 		passwort.setBounds(138, 173, 438, 26);
 		passwort.setText("passwort");
 		
+		//Wenn der Button geklickt wird werden die Eingegeben Daten an die DB übergeben.
+		//Es erfolgt eine Ausgabe bei erfolgreicher Übermittelung
 		Button btnConnect = new Button(GroupAll, SWT.NONE);
 		btnConnect.setBounds(263, 262, 90, 30);
 		btnConnect.addSelectionListener(new SelectionAdapter() {
@@ -261,7 +272,7 @@ public class Mainwindow {
 					GroupAll.setVisible(false);
 					submitbutton.setVisible(true);
 					System.out.println("Daten wurden übermittelt");
-	
+					//Catch ist eine Testfunktion, ist Defaultmäßig nicht implementiert
 				} catch (NumberFormatException message) {
 					txtwarning.setVisible(true);
 					txtDBAuswahl.setVisible(false);
@@ -371,6 +382,7 @@ public class Mainwindow {
 				btnApacheDerby.setText("Derby");
 				
 				//Textfeld der jeweiligen für die jeweilige Sprache wird angezeigt, nachdem der Button gedrückt wurde.
+				//Die anderen Textfehler von den DB werden invisible gesetzt.
 				btnApacheDerby.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
@@ -425,6 +437,7 @@ public class Mainwindow {
 
 	}
 	//Fehlermeldung als Text wenn etwas nicht richtig eingegeben wurde
+	//Testmethode nicht implementiert
 	public static void alertMessage(String message){
 		
 		if(message == "NumberFormatException"){
@@ -447,6 +460,8 @@ public class Mainwindow {
 		
 	}
 	//Daten werden in die Datenbank übertragen/Verbindung mit DB wird aufgebaut
+	//Wenn der jeweilige Group durch aktivierung des Buttons sichtbar ist wird die jeweilige Methode ausgeführt.
+	//Daten werden übergeben und die DB wird nach Flughafendaten abgefragt.
 	public void InsertData(){
 		try{
 		if(postgreGroup.getVisible()==true){
