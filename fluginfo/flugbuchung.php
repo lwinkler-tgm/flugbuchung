@@ -28,8 +28,8 @@
 
       <form action="?search=1" method="POST">
         <input type="text" id="airline" name="airline" placeholder="Airline" />
-        <input type="text" id="flightnr" name="flightnr" placeholder="Flightnumber" />
-        <button type="submit">Search</button>
+        <input type="text" id="flightnr" name="flightnr" placeholder="Flugnummer" />
+        <button type="submit">Suchen</button>
       </form>
 
     </body>
